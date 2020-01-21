@@ -1,0 +1,24 @@
+h2 {
+  font-family: Georgia;
+  color: darkgreen;
+  font-size: 14px;
+}
+
+.list-plus {
+  font-weight: bold;
+}
+
+.profile_pic {
+    border-radius: 15%;
+    margin-right: 25px;
+}
+
+.jumbotron {
+    display: flex;
+    flex-direction: row;
+}
+
+.cta_button {
+    margin-top: 10px;
+    border-radius: 15%;
+}
