@@ -4,12 +4,16 @@ h2 {
   font-size: 14px;
 }
 
+#introduction {
+    text-align: center;
+}
+
 .list-plus {
   font-weight: bold;
 }
 
 .profile_pic {
-    border-radius: 15%;
+    border-radius: 5%;
     margin-right: 25px;
 }
 
@@ -18,7 +22,13 @@ h2 {
     flex-direction: row;
 }
 
+#jumbo {
+    padding-top: 40px;
+    padding-bottom: 25px;
+}
+
 .cta_button {
+    width: 100px;
     margin-top: 10px;
     border-radius: 15%;
 }
