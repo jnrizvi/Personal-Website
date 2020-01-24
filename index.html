@@ -27,6 +27,7 @@
             </ul>
         </div>
     </nav>
+    
     <div class="container-lg">
         <div class="jumbotron bg-transparent" id="jumbo">
             <img class="profile_pic" src="photograph.png" alt="Avatar" width="179" height="240px" >
@@ -41,21 +42,55 @@
         <p class="lead">Growing up in Edmonton, I'm used to the cold. When solving problems, I look for the most creative and methodical approach, 
             and then try to understand it well enough to be able to explain it to my colleagues. My best talents are decision making
             and attention to detail -- I try to take lead whenever I can, and make sure every little thing goes where it's supposed to. 
-            These days, I'm keen on Full-Stack development with an emphasis on data science wherever possible.</p>
+            These days, I'm keen on Full-Stack development with an emphasis on data analysis wherever possible.</p>
 
         <h2 class="chart-title">Experience</h2>
+        <p>Overall, I'm most comfortable with Python.</p>
         <ul>
-            <li>Python 3: Intermediate</li>
-            <li>C: Intermediate</li>
-            <li>JavaScript: Beginner</li>
-            <li>HTML/CSS: Beginner</li>
+            <li>Python 3: 3 Years (2D puzzles -> SQLite application -> Min-Max/Basic ML -> Flask REST API -> Image Processing/ML)</li>
+            <li>Front End: 1 Year (Personal website -> Basic React with AJAX -> Advanced React with Redux)</li>
+            <li>GitHub: 1.5 Years (add/commit/push -> branches and pull requests -> CI and more)</li>
+            <li>Data Science: 0.5 Years (Web Scraping -> Parsing Data -> Basic D3.js Visualizations -> ???)</li>
+            <li>Software Deployment: 0.5 Years (GitHub Pages -> Heroku -> Cybera and Docker)</li>
+            <li>C: 1 Year (Makefile -> Parsing files -> 2D Game with SDL -> Pathfinding and Algorithms)</li>
+            <li>Java: 0.5 Years (Android app with ListView's -> Complex Android app with Firebase)</li>
+            <li>Network Security: 0 Years</li>
         </ul>
+        
+        <div class="chart-area"></div>
+        
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script>
+            var data = [0, 1, 2, 3, 4, 5, 6, 7];
+            var margin = { left: 100, right:100, top: 10, bottom: 100 };
+            var width = 900 - margin.left - margin.right;
+            var height = 500 - margin.top - margin.bottom;
+
+            var svg = d3.selectAll(".chart-area").append("svg")
+                .attr("width", width+margin.left+margin.right)
+                .attr("height", height+margin.top+margin.bottom)
+
+            var g = svg.append("g")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("transform", `translate(${margin.left}, ${margin.top})`)
+            
+            var rectangles = g.selectAll("rect").data(data).enter()
+            // console.log(rectangles)
+            rectangles
+                .append("rect")
+                    .attr("x", 50 )
+                    .attr("y", (d, i) => i*60)
+                    .attr("width", 100)
+                    .attr("height", 50)
+                    .attr("fill", "green")
+            
+        </script>
 
         <h2>Clubs and Events</h2>
         <ul>
             <li class="list-plus">Undergraduate Artificial Intelligence Society</li>
-            <p>Basic implementation of reinforcement learning on Classic Control
-                    environments in gym.openai</p>
+            <p>Executive member. Responsible for public relations and social media.</p>
             <li class="list-plus">Level Up Hackathon</li>
             <p>Obtained certificate for developing the web app “MoodCloud” with a
                 team. The Spotify API was used.</p>
@@ -64,4 +99,5 @@
     </div>
   </body>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  
 </html>
