@@ -62,9 +62,9 @@
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script>
             // set the dimensions and margins of the graph
-            var margin = {top: 10, right: 30, bottom: 20, left: 50},
+            var margin = {top: 10, right: 30, bottom: 75, left: 50},
                 width = 460 - margin.left - margin.right,
-                height = 400 - margin.top - margin.bottom;
+                height = 450 - margin.top - margin.bottom;
 
             // append the svg object to the body of the page
             var svg = d3.select(".chart-area")
@@ -86,17 +86,12 @@
             ]
             
             console.log(data);
-            // List of subgroups = header of the csv files = soil condition here
-            // ["Nitrogen", "normal", "stress"]
-            // var subgroups = data.columns.slice(1)
+            // List of subgroups = levels that are stacked onto one bar
             var subgroups = ["level1", "level2", "level3", "level4", "level5"]
-
             // console.log(subgroups);
-            // List of groups = species here = value of the first column called group -> I show them on the X axis
-            // ["banana", "poacee", "sorgho", "triticum"]
-            // var groups = d3.map(data, function(d) {
-            //     return(d.group)
-            // }).keys()
+
+            // List of groups = titles here -> I show them on the X axis
+            // ["Python", "Front End", "GitHub", "Data Science", "Deployment", "C", "Java"]
             var groups = data.map(d => {
                 return d.title;
             })
@@ -108,7 +103,12 @@
                 .padding([0.2])
             svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x).tickSizeOuter(0));
+                .call(d3.axisBottom(x).tickSizeOuter(0))
+                .selectAll("text")
+                    .attr("y", "10")
+                    .attr("x", "-5")
+                    .attr("text-anchor", "end")
+                    .attr("transform", "rotate(-45)");
 
             // Add Y axis
             var y = d3.scaleLinear()
@@ -120,7 +120,7 @@
             // color palette = one color per subgroup
             var color = d3.scaleOrdinal()
                 .domain(subgroups)
-                .range(['#a7d49e','#7fc27b','#43a34b', '#007f13', '#006e27'])
+                .range(['#88D969','#46CB18','#06A10B', '#1D800E', '#006400'])
 
             //stack the data? --> stack per subgroup
             var stackedData = d3.stack()
