@@ -61,43 +61,51 @@
         
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script>
-            var data = [0, 1, 2, 3, 4, 5, 6];
+            // var data = [0, 1, 2, 3, 4, 5, 6];
             var data = [
-                { "title": "Python", "years": 3, "experience": 550 },
-                { "title": "Front End", "years": 1, "experience": 350 },
-                { "title": "GitHub", "years": 1.5, "experience": 300 },
-                { "title": "Data Science", "years": 0.5, "experience": 200 },
-                { "title": "Deployment", "years": 0.5, "experience": 150 },
-                { "title": "C", "years": 1, "experience": 150 },
-                { "title": "Java", "years": 0.5, "experience": 75 }
+                { "title": "Python", "years": 3, "level1": 100, "level2": 70, "level3": 50, "level4": 175, "level5": 150, "experience": 550 },
+                { "title": "Front End", "years": 1, "level1": 75, "level2": 150, "level3": 200, "level4": 0, "level5": 0, "experience": 350 },
+                { "title": "GitHub", "years": 1.5, "level1": 120, "level2": 60, "level3": 90, "level4": 0, "level5": 0, "experience": 300 },
+                { "title": "Data Science", "years": 0.5, "level1": 80, "level2": 130, "level3": 110, "level4": 0, "level5": 0, "experience": 200 },
+                { "title": "Deployment", "years": 0.5, "level1": 100, "level2": 40, "level3": 90, "level4": 0, "level5": 0, "experience": 150 },
+                { "title": "C", "years": 1, "level1": 70, "level2": 115, "level3": 90, "level4": 0, "level5": 0, "experience": 150 },
+                { "title": "Java", "years": 0.5, "level1": 60, "level2": 120, "level3": 0, "level4": 0, "level5": 0, "experience": 75 }
             ]
             var margin = { left: 100, right:100, top: 10, bottom: 100 };
             var width = 900 - margin.left - margin.right;
             var height = 450 - margin.top - margin.bottom;
 
-            // var stackdata = ["gold", "silver"].map(function(c) {
-            //     return data.map(function(d,i) {
-            //         return {x:i, y:d[c]} })
-            // });
+            var stackdata = data.map( (element, i) => {
+                return ["level1", "level2", "level3", "level4", "level5"].map((level) => {
+                    return {x: i, y: element[level]}
+                })
+            });
+
+            // console.log(stackdata);
+            var stack = d3.stack();
+            stack(data);
+            var colors = ["red", "orange", "yellow", "green", "blue"]
 
             var svg = d3.selectAll(".chart-area").append("svg")
                 .attr("width", width+margin.left+margin.right)
                 .attr("height", height+margin.top+margin.bottom)
 
-            var g = svg.append("g")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("transform", `translate(${margin.left}, ${margin.top})`)
-            
-            var rectangles = g.selectAll("rect").data(data).enter()
-            // console.log(rectangles)
-            rectangles
+            // Add a group for each row of data
+            var groups = svg.selectAll("g")
+                .data(stackdata)
+                .enter()
+                .append("g")
+                .style("fill", function(d, i) { return colors[i]})
+
+            // Add a rect for each data value
+            var rects = groups.selectAll("rect")
+                .data(function(d) {return d})
+                .enter()
                 .append("rect")
-                    .attr("x", 50 )
-                    .attr("y", (d, i) => i*60)
-                    .attr("width", (d) => d.experience)
-                    .attr("height", 50)
-                    .attr("fill", "green")
+                .attr("x", function(d, i) {return i*50})
+                .attr("y", function(d) {return d.y0})
+                .attr("height", function(d) {return d.y})
+                .attr("width", 40)
             
         </script>
 
