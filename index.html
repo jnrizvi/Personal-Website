@@ -59,53 +59,90 @@
         
         <div class="chart-area"></div>
         
-        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
         <script>
-            // var data = [0, 1, 2, 3, 4, 5, 6];
+            // set the dimensions and margins of the graph
+            var margin = {top: 10, right: 30, bottom: 20, left: 50},
+                width = 460 - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
+
+            // append the svg object to the body of the page
+            var svg = d3.select(".chart-area")
+            .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform",
+                    "translate(" + margin.left + "," + margin.top + ")");
+
             var data = [
-                { "title": "Python", "years": 3, "level1": 100, "level2": 70, "level3": 50, "level4": 175, "level5": 150, "experience": 550 },
-                { "title": "Front End", "years": 1, "level1": 75, "level2": 150, "level3": 200, "level4": 0, "level5": 0, "experience": 350 },
-                { "title": "GitHub", "years": 1.5, "level1": 120, "level2": 60, "level3": 90, "level4": 0, "level5": 0, "experience": 300 },
-                { "title": "Data Science", "years": 0.5, "level1": 80, "level2": 130, "level3": 110, "level4": 0, "level5": 0, "experience": 200 },
-                { "title": "Deployment", "years": 0.5, "level1": 100, "level2": 40, "level3": 90, "level4": 0, "level5": 0, "experience": 150 },
-                { "title": "C", "years": 1, "level1": 70, "level2": 115, "level3": 90, "level4": 0, "level5": 0, "experience": 150 },
-                { "title": "Java", "years": 0.5, "level1": 60, "level2": 120, "level3": 0, "level4": 0, "level5": 0, "experience": 75 }
+                { "title": "Python", "level1": 100, "level2": 70, "level3": 50, "level4": 175, "level5": 150 },
+                { "title": "Front End", "level1": 75, "level2": 150, "level3": 200, "level4": 0, "level5": 0 },
+                { "title": "GitHub", "level1": 120, "level2": 60, "level3": 90, "level4": 0, "level5": 0 },
+                { "title": "Data Science", "level1": 80, "level2": 130, "level3": 110, "level4": 0, "level5": 0 },
+                { "title": "Deployment", "level1": 100, "level2": 40, "level3": 90, "level4": 0, "level5": 0 },
+                { "title": "C", "level1": 70, "level2": 115, "level3": 90, "level4": 0, "level5": 0 },
+                { "title": "Java", "level1": 60, "level2": 120, "level3": 0, "level4": 0, "level5": 0 }
             ]
-            var margin = { left: 100, right:100, top: 10, bottom: 100 };
-            var width = 900 - margin.left - margin.right;
-            var height = 450 - margin.top - margin.bottom;
+            
+            console.log(data);
+            // List of subgroups = header of the csv files = soil condition here
+            // ["Nitrogen", "normal", "stress"]
+            // var subgroups = data.columns.slice(1)
+            var subgroups = ["level1", "level2", "level3", "level4", "level5"]
 
-            var stackdata = data.map( (element, i) => {
-                return ["level1", "level2", "level3", "level4", "level5"].map((level) => {
-                    return {x: i, y: element[level]}
-                })
-            });
+            // console.log(subgroups);
+            // List of groups = species here = value of the first column called group -> I show them on the X axis
+            // ["banana", "poacee", "sorgho", "triticum"]
+            // var groups = d3.map(data, function(d) {
+            //     return(d.group)
+            // }).keys()
+            var groups = data.map(d => {
+                return d.title;
+            })
 
-            // console.log(stackdata);
-            var stack = d3.stack();
-            stack(data);
-            var colors = ["red", "orange", "yellow", "green", "blue"]
+            // Add X axis
+            var x = d3.scaleBand()
+                .domain(groups)
+                .range([0, width])
+                .padding([0.2])
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x).tickSizeOuter(0));
 
-            var svg = d3.selectAll(".chart-area").append("svg")
-                .attr("width", width+margin.left+margin.right)
-                .attr("height", height+margin.top+margin.bottom)
+            // Add Y axis
+            var y = d3.scaleLinear()
+                .domain([0, 545])
+                .range([ height, 0 ]);
+            svg.append("g")
+                .call(d3.axisLeft(y));
 
-            // Add a group for each row of data
-            var groups = svg.selectAll("g")
-                .data(stackdata)
-                .enter()
-                .append("g")
-                .style("fill", function(d, i) { return colors[i]})
+            // color palette = one color per subgroup
+            var color = d3.scaleOrdinal()
+                .domain(subgroups)
+                .range(['#a7d49e','#7fc27b','#43a34b', '#007f13', '#006e27'])
 
-            // Add a rect for each data value
-            var rects = groups.selectAll("rect")
-                .data(function(d) {return d})
-                .enter()
-                .append("rect")
-                .attr("x", function(d, i) {return i*50})
-                .attr("y", function(d) {return d.y0})
-                .attr("height", function(d) {return d.y})
-                .attr("width", 40)
+            //stack the data? --> stack per subgroup
+            var stackedData = d3.stack()
+                .keys(subgroups)
+                (data)
+
+            // Show the bars
+            svg.append("g")
+                .selectAll("g")
+                // Enter in the stack data = loop key per key = group per group
+                .data(stackedData)
+                .enter().append("g")
+                .attr("fill", function(d) { return color(d.key); })
+                .selectAll("rect")
+                // enter a second time = loop subgroup per subgroup to add all rectangles
+                .data(function(d) { return d; })
+                .enter().append("rect")
+                    .attr("x", function(d, i) { return x( groups[i] ); })
+                    .attr("y", function(d) { return y(d[1]); })
+                    .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+                    .attr("width",x.bandwidth())
+            
             
         </script>
 
